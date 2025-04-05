@@ -1,5 +1,6 @@
 namespace SpriteKind {
-    export const Shader = SpriteKind.create()
+    //% isKind
+    export const Shader = SpriteKind.create();
 }
 
 //% color="#9e6eb8" icon="\uf0eb"
@@ -130,6 +131,9 @@ namespace shader {
         let palette: Buffer;
         palette = shadeitem(shadeLevel)
         spr.data["__palette__"] = palette as Buffer
+        if (spr instanceof ShaderSprite) {
+            (spr as ShaderSprite).onPaletteChanged(); // Update palette when set
+        }
     }
 
     //% blockId=shader_shadelevel
@@ -149,12 +153,12 @@ namespace shader {
             this.data["__palette__"] = shadePalette as Buffer
             this.shadePalette = shadePalette;
             this.shadeRectangle = true;
-            this.shadeUpdate();
+            this.onPaletteChanged();
         }
 
         
-        shadeUpdate() {
-            setInterval( function () { if (this.shadePalette !== this.data["__palette__"]) this.shadePalette = this.data["__palette__"]; }, 1)
+        onPaletteChanged() {
+            if (this.shadePalette !== this.data["__palette__"]) this.shadePalette = this.data["__palette__"] as Buffer;
         }
 
         __drawCore(camera: scene.Camera) {
